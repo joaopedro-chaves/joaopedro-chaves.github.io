@@ -1,0 +1,12 @@
+services:
+  site:
+    container_name: joaopedro-chaves.io
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/src
+    environment:
+      - HUGO_ENVIRONMENT=development
