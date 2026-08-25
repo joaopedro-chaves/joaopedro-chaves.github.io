@@ -18,26 +18,32 @@ markup:
 
 menu:
   main:
+    - name: Blog
+      pageRef: /blog
+      weight: 1
+    - name: Projetos
+      pageRef: /projects
+      weight: 2
     - name: Docs
       pageRef: /docs
-      weight: 1
-    - name: About
-      pageRef: /about
-      weight: 2
-    - name: Contact ↗
-      url: "https://github.com/joaopedro-chaves"
       weight: 3
-    - name: Search
+    - name: Sobre mim
+      pageRef: /about
       weight: 4
+    - name: Contato
+      url: "https://github.com/joaopedro-chaves"
+      weight: 5
+    - name: Buscar
+      weight: 6
       params:
         type: search
     - name: GitHub
-      weight: 5
+      weight: 7
       url: "https://github.com/joaopedro-chaves/joaopedro-chaves.github.io"
       params:
         icon: github
     - name: Instagram
-      weight: 6
+      weight: 8
       url: "https://instagram.com/joaopedro.254"
       params:
         icon: instagram
@@ -52,5 +58,5 @@ params:
     displayPoweredBy: true
 
   editURL:
-    enable: true
-    base: "https://github.com/joaopedro-chaves/joaopedro-chaves.github.io"
+    enable: false
+    base: ""
