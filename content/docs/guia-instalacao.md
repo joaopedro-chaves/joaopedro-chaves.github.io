@@ -127,7 +127,7 @@ content/
 │   │   └── img01.png
 └── projetos/            # Seção do Portfólio
     ├── _index.md
-    └── projeto-1.md
+    ├── projeto-1.md
     ├── images/
     │   └── img01.png
 ```
@@ -347,8 +347,8 @@ Mensagem de erro crítico ou incompatibilidade.
 
 ```markdown
 {{</* cards */>}}
-  {{</* card link="/docs" title="Documentação" icon="book-open" subtitle="Guias técnicos e tutoriais" */>}}
-  {{</* card link="/projects" title="Projetos" icon="code" subtitle="Portfólio de projetos" */>}}
+{{</* card link="/docs" title="Documentação" icon="book-open" subtitle="Guias técnicos e tutoriais" */>}}
+{{</* card link="/projects" title="Projetos" icon="code" subtitle="Portfólio de projetos" */>}}
 {{</* /cards */>}}
 ```
 
@@ -356,16 +356,20 @@ Mensagem de erro crítico ou incompatibilidade.
 
 ````markdown
 {{</* tabs items='["Linux / macOS", "Windows (PowerShell)"]' */>}}
-  {{</* tab */>}}
-  ```bash
-  ./scripts/dev.sh start
-  ```
-  {{</* /tab */>}}
-  {{</* tab */>}}
-  ```powershell
-  hugo server -p 8000
-  ```
-  {{</* /tab */>}}
+{{</* tab */>}}
+
+```bash
+./scripts/dev.sh start
+```
+
+{{</* /tab */>}}
+{{</* tab */>}}
+
+```powershell
+hugo server -p 8000
+```
+
+{{</* /tab */>}}
 {{</* /tabs */>}}
 ````
 
@@ -373,8 +377,7 @@ Mensagem de erro crítico ou incompatibilidade.
 
 ```markdown
 {{</* cards */>}}
-  {{</* card link="/docs" title="Guia de Instalação" image="/images/exemplo.png" subtitle="Breve descrição opcional" */>}}
-  {{</* card link="https://github.com" title="Link Externo" image="https://placeholder.com" */>}}
+{{</* card link="/docs" title="Guia de Instalação" image="/images/exemplo.png" subtitle="Breve descrição opcional" */>}}
+{{</* card link="https://github.com" title="Link Externo" image="https://placeholder.com" */>}}
 {{</* /cards */>}}
 ```
-
