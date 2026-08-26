@@ -4,11 +4,11 @@ description: "Descrição e detalhes sobre o primeiro projeto."
 weight: 1
 ---
 
-## 📌 Visão Geral
+## Visão Geral
 
-Este é o primeiro projeto documentado no portfólio.
+Este é o primeiro projeto documentado, sobre o desenvolvimento do blog.
 
-### 🛠️ Tecnologias Utilizadas
+### Tecnologias Utilizadas
 
 - **Hugo & Hextra**
 - **Docker & Docker Compose**

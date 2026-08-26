@@ -1,8 +1,6 @@
 ---
-title: "Meu Primeiro Post"
-description: "Primeiro post de introdução ao blog."
-date: 2026-08-20
-tags: ["boas-vindas", "hugo", "desenvolvimento"]
+title: "Desenvolvimento de Banco de Dados - Projeto Universitario"
+description: "Projeto de Desenvolvimento de Banco de Dados"
+date: 2026-08-26
+tags: ["desenvolvimento", "banco de dados", "projeto", "MySQL"]
 ---
-
-Olá! Este é o primeiro post publicado no blog. Aqui serão compartilhados conhecimentos sobre tecnologia, boas práticas e desenvolvimento de software.
