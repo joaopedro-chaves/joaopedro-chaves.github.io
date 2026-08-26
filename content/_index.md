@@ -1,5 +1,5 @@
 ---
-date: '2026-08-26T18:21:34Z'
+date: '2026-08-26T18:24:12Z'
 draft: false
 cascade:
   type: 
@@ -15,7 +15,7 @@ cascade:
 
 ### Agosto 2026
 
-- [Desenvolvimento de Banco de Dados - Projeto Universitario](/blog/2026/meu-primeiro-post/) *(26/08/2026)* — `desenvolvimento`, `banco`, `de`, `dados`, `projeto`, `MySQL`
+- [Desenvolvimento de Banco de Dados - Projeto Universitario](/blog/2026/mysqlproject/) *(26/08/2026)* — `desenvolvimento`, `banco`, `de`, `dados`, `projeto`, `MySQL`
 
 ### Sem data
 
