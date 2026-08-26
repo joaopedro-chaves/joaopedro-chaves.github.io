@@ -190,6 +190,7 @@ def generate_index(posts, title=None):
         "{{< cards >}}",
         "{{< card link=\"blog\" title=\"Blog\" icon=\"newspaper\" >}}",
         "{{< card link=\"docs\" title=\"Documentação\" icon=\"book-open\" >}}",
+        "{{< card link=\"about\" title=\"Sobre\" icon=\"user\" >}}",
         "{{< card link=\"projects\" title=\"Projetos\" icon=\"folder\" >}}",
         "{{< /cards >}}",
         "## Últimos Posts",
