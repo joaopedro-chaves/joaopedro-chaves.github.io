@@ -1,5 +1,5 @@
 ---
-date: '2026-08-26T18:18:21Z'
+date: '2026-08-26T18:21:34Z'
 draft: false
 cascade:
   type: 
@@ -8,6 +8,7 @@ cascade:
 {{< cards >}}
 {{< card link="blog" title="Blog" icon="newspaper" >}}
 {{< card link="docs" title="Documentação" icon="book-open" >}}
+{{< card link="about" title="Sobre" icon="user" >}}
 {{< card link="projects" title="Projetos" icon="folder" >}}
 {{< /cards >}}
 ## Últimos Posts

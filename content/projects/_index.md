@@ -1,6 +1,6 @@
 ---
 title: "Projetos"
-date: '2026-08-26T18:18:21Z'
+date: '2026-08-26T18:21:34Z'
 draft: false
 ---
 
