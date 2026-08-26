@@ -2,6 +2,13 @@
 toc: false
 ---
 
+{{< cards >}}
+{{< card link="blog" title="Blog" icon="newspaper" >}}
+{{< card link="docs" title="Docs" icon="book-open" >}}
+{{< card link="about" title="About" icon="user" >}}
+{{< card link="projects" title="Projects" icon="folder" >}}
+{{< /cards >}}
+
 ## Posts recentes
 
 {{< recent limit=5 section="blog" >}}
@@ -12,9 +19,4 @@ toc: false
 
 ## Portfólio
 
-{{< cards >}}
-{{< card link="blog" title="Blog" icon="newspaper" >}}
-{{< card link="docs" title="Docs" icon="book-open" >}}
-{{< card link="about" title="About" icon="user" >}}
-{{< card link="projects" title="Projects" icon="folder" >}}
-{{< /cards >}}
+_Em construção..._

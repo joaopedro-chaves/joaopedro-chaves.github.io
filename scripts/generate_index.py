@@ -8,26 +8,24 @@ Scans all markdown files in content/, extracts frontmatter metadata,
 groups posts by year/month, and generates a chronological listing
 with the most recent posts first.
 
-Usage:
-    scripts/generate_index.py
-
 Script original by thyagobrejao and modified
 """
 
 import os
 import re
-import sys
 from datetime import datetime, timezone
 from collections import defaultdict
 
 # Project root is one level up from the scripts directory
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONTENT_DIR = os.path.join(PROJECT_ROOT, "content")
-INDEX_FILE_PT = os.path.join(CONTENT_DIR, "_index.md")
-INDEX_FILE_EN = os.path.join(CONTENT_DIR, "_index.en.md")
+# DOCS_DIR = os.path.join(CONTENT_DIR, "docs") # local documents
+# BLOG_DIR = os.path.join(CONTENT_DIR, "blog") # posts
+# PROJECTS_DIR = os.path.join(CONTENT_DIR, "projects") # projects
+INDEX_FILE = os.path.join(CONTENT_DIR, "_index.md") # main index
 
 # Files and directories to skip
-SKIP_FILES = {"_index.md", "_index.en.md", "about.md", "about.en.md"}
+SKIP_FILES = {"_index.md", "about.md"}
 SKIP_DIRS = {".git", "public", "themes", "static", "assets"}
 
 MONTH_NAMES_PT = {
@@ -35,13 +33,6 @@ MONTH_NAMES_PT = {
     5: "Maio", 6: "Junho", 7: "Julho", 8: "Agosto",
     9: "Setembro", 10: "Outubro", 11: "Novembro", 12: "Dezembro"
 }
-
-MONTH_NAMES_EN = {
-    1: "January", 2: "February", 3: "March", 4: "April",
-    5: "May", 6: "June", 7: "July", 8: "August",
-    9: "September", 10: "October", 11: "November", 12: "December"
-}
-
 
 def parse_frontmatter(filepath):
     """Extract frontmatter fields from a markdown file."""
@@ -79,9 +70,7 @@ def parse_frontmatter(filepath):
         else:
             data["tags"] = []
 
-    tags_match = re.search(
-        r"tags:\s*\n((?:\s*-\s*.+\n?)+)", frontmatter_text
-    )
+    tags_match = re.search(r"tags:\s*\n((?:\s*-\s*.+\n?)+)", frontmatter_text)
     if tags_match:
         tags = re.findall(r"-\s*(.+)", tags_match.group(1))
         data["tags"] = [t.strip().strip("'\"") for t in tags]
@@ -90,38 +79,31 @@ def parse_frontmatter(filepath):
 
 
 def parse_date(date_str):
-    """Parse a date string from frontmatter into a datetime object."""
+    """Parse a date string from frontmatter into a timezone-aware datetime object."""
     if not date_str:
         return None
 
-    # Try ISO 8601 with timezone
-    for fmt in [
-        "%Y-%m-%dT%H:%M:%S%z",
-        "%Y-%m-%dT%H:%M:%S",
-        "%Y-%m-%d",
-    ]:
+    date_str_clean = date_str.replace("'", "").replace('"', "")
+
+    for fmt in ["%Y-%m-%dT%H:%M:%S%z", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"]:
         try:
-            return datetime.strptime(date_str.replace("'", "").replace('"', ""), fmt)
+            dt = datetime.strptime(date_str_clean, fmt)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt
         except ValueError:
             continue
 
     # Handle timezone offset like -03:00
-    cleaned = re.sub(r"([+-]\d{2}):(\d{2})$", r"\1\2", date_str)
+    cleaned = re.sub(r"([+-]\d{2}):(\d{2})$", r"\1\2", date_str_clean)
     try:
-        return datetime.strptime(cleaned, "%Y-%m-%dT%H:%M:%S%z")
+        dt = datetime.strptime(cleaned, "%Y-%m-%dT%H:%M:%S%z")
+        return dt
     except ValueError:
         return None
 
-
-def get_en_filepath(filepath):
-    """Get the English translation filepath for a given pt-br file."""
-    base, ext = os.path.splitext(filepath)
-    return base + ".en" + ext
-
-
 def get_section(filepath):
-    """Get the top-level section name for a post (e.g. 'projetos', 'tecnologias').
-    Returns None if the post is directly in the content root."""
+    """Get the top-level section name for a post."""
     rel_path = os.path.relpath(filepath, CONTENT_DIR)
     parts = rel_path.split(os.sep)
     if len(parts) > 1:
@@ -130,21 +112,15 @@ def get_section(filepath):
 
 
 def collect_posts():
-    """Walk the content directory and collect all post metadata (pt-br and en)."""
-    posts_pt = []
-    posts_en = []
+    """Walk the content directory and collect all post metadata."""
+    posts = []
 
     for root, dirs, files in os.walk(CONTENT_DIR):
         # Skip unwanted directories
         dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
 
         for filename in files:
-            if not filename.endswith(".md"):
-                continue
-            if filename in SKIP_FILES:
-                continue
-            # Skip English translations (processed alongside pt-br)
-            if filename.endswith(".en.md"):
+            if not filename.endswith(".md") or filename in SKIP_FILES:
                 continue
 
             filepath = os.path.join(root, filename)
@@ -160,13 +136,12 @@ def collect_posts():
             if frontmatter.get("coming_soon", "false").lower() == "true":
                 continue
 
-            title_pt = frontmatter.get("title", os.path.splitext(filename)[0])
+            title = frontmatter.get("title", os.path.splitext(filename)[0])
             date = parse_date(frontmatter.get("date", ""))
-            tags_pt = frontmatter.get("tags", [])
+            tags = frontmatter.get("tags", [])
 
-            # Skip future posts
             if date:
-                now_cmp = datetime.now(date.tzinfo) if date.tzinfo else datetime.now()
+                now_cmp = datetime.now(timezone.utc)
                 if date > now_cmp:
                     continue
 
@@ -184,106 +159,58 @@ def collect_posts():
             url = "/" + url_path.replace(os.sep, "/") + "/"
             section = get_section(filepath)
 
-            posts_pt.append({
-                "title": title_pt,
+            posts.append({
+                "title": title,
                 "date": date,
-                "tags": tags_pt,
+                "tags": tags,
                 "url": url,
                 "section": section,
             })
 
-            # Try to get English translation
-            en_filepath = get_en_filepath(filepath)
-            title_en = title_pt  # fallback to pt-br title
-            tags_en = tags_pt    # fallback to pt-br tags
-            if os.path.exists(en_filepath):
-                en_frontmatter = parse_frontmatter(en_filepath)
-                if en_frontmatter:
-                    title_en = en_frontmatter.get("title", title_pt)
-                    tags_en = en_frontmatter.get("tags", tags_pt)
-
-            posts_en.append({
-                "title": title_en,
-                "date": date,
-                "tags": tags_en,
-                "url": url,
-                "section": section,
-            })
-
-    # Sort by date, most recent first
-    posts_pt.sort(key=lambda p: p["date"] or datetime.min, reverse=True)
-    posts_en.sort(key=lambda p: p["date"] or datetime.min, reverse=True)
-    return posts_pt, posts_en
+    min_datetime = datetime.min.replace(tzinfo=timezone.utc)
+    posts.sort(key=lambda p: p["date"] or min_datetime, reverse=True)
+    return posts
 
 
-def generate_index(posts, lang="pt", title=None):
-    """Generate the _index.md content with posts grouped by year/month."""
+def generate_index(posts, title=None):
+    """Generate the root _index.md content."""
     lines = []
-
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    if lang == "en":
-        month_names = MONTH_NAMES_EN
-        default_title = "Blog Thyago.dev.br"
-        header = "## Latest Posts"
-        empty_msg = "No published posts yet. Stay tuned!"
-        no_date = "### No date"
-        date_fmt = "%m/%d/%Y"
-    else:
-        month_names = MONTH_NAMES_PT
-        default_title = "Blog Thyago.dev.br"
-        header = "## Últimos Posts"
-        empty_msg = "Nenhum post publicado ainda. Em breve teremos novidades!"
-        no_date = "### Sem data"
-        date_fmt = "%d/%m/%Y"
+    display_title = title or "Blog"
 
-    display_title = title or default_title
-
-    # Frontmatter
-    lines.append("---")
-    lines.append(f"date: '{now}'")
-    lines.append("draft: false")
-    lines.append(f"title: '{display_title}'")
-    lines.append("cascade:")
-    lines.append("  type: docs")
-    lines.append("---")
-    lines.append("")
-    lines.append(header)
-    lines.append("")
+    lines.extend([
+        "---",
+        f"date: '{now}'",
+        "draft: false",
+        f"title: '{display_title}'",
+        "cascade:",
+        "  type: docs",
+        "---",
+        "",
+        "## Últimos Posts",
+        ""
+    ])
 
     if not posts:
-        lines.append(empty_msg)
+        lines.append("Nenhum post publicado ainda")
         return "\n".join(lines) + "\n"
 
-    # Group by year/month
     grouped = defaultdict(list)
     for post in posts:
-        if post["date"]:
-            key = (post["date"].year, post["date"].month)
-        else:
-            key = (0, 0)
+        key = (post["date"].year, post["date"].month) if post["date"] else (0, 0)
         grouped[key].append(post)
 
-    # Sort keys by date descending
-    sorted_keys = sorted(grouped.keys(), reverse=True)
-
-    for year, month in sorted_keys:
+    for year, month in sorted(grouped.keys(), reverse=True):
         if year == 0:
-            lines.append(no_date)
+            lines.append("### Sem data")
         else:
-            month_name = month_names.get(month, "")
-            lines.append(f"### {month_name} {year}")
+            lines.append(f"### {MONTH_NAMES_PT.get(month, '')} {year}")
         lines.append("")
 
         for post in grouped[(year, month)]:
-            date_str = ""
-            if post["date"]:
-                date_str = post["date"].strftime(date_fmt)
-
-            tag_str = ""
-            if post["tags"]:
-                tag_str = " — " + ", ".join(f"`{t}`" for t in post["tags"])
-
+            date_str = post["date"].strftime("%d/%m/%Y") if post["date"] else ""
+            tag_str = " — " + ", ".join(f"`{t}`" for t in post["tags"]) if post["tags"] else ""
             lines.append(f"- [{post['title']}]({post['url']}) *({date_str})*{tag_str}")
 
         lines.append("")
@@ -291,12 +218,9 @@ def generate_index(posts, lang="pt", title=None):
     return "\n".join(lines) + "\n"
 
 
-def get_section_frontmatter(section_dir, lang):
+def get_section_frontmatter(section_dir):
     """Read existing section _index frontmatter to preserve title and tags."""
-    if lang == "en":
-        index_file = os.path.join(section_dir, "_index.en.md")
-    else:
-        index_file = os.path.join(section_dir, "_index.md")
+    index_file = os.path.join(section_dir, "_index.md")
 
     if os.path.exists(index_file):
         fm = parse_frontmatter(index_file)
@@ -307,11 +231,7 @@ def get_section_frontmatter(section_dir, lang):
 
 def get_sections_with_posts(posts):
     """Get the set of section names that have at least one published post."""
-    sections = set()
-    for post in posts:
-        if post.get("section"):
-            sections.add(post["section"])
-    return sections
+    return {post["section"] for post in posts if post.get("section")}
 
 
 def filter_posts_by_section(posts, section):
@@ -319,72 +239,49 @@ def filter_posts_by_section(posts, section):
     return [p for p in posts if p.get("section") == section]
 
 
-def generate_section_index(posts, lang, title, tags):
-    """Generate a section _index.md content with posts grouped by year/month."""
+def generate_section_index(posts, title, tags):
+    """Generate a section _index.md content."""
     lines = []
-
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    if lang == "en":
-        month_names = MONTH_NAMES_EN
-        header = "## Latest Posts"
-        no_date = "### No date"
-        date_fmt = "%m/%d/%Y"
-    else:
-        month_names = MONTH_NAMES_PT
-        header = "## Últimos Posts"
-        no_date = "### Sem data"
-        date_fmt = "%d/%m/%Y"
+    lines.extend([
+        "---",
+        f'title: "{title}"',
+        f"date: '{now}'"
+    ])
 
-    # Frontmatter
-    lines.append("---")
-    lines.append(f"title: \"{title}\"")
-    lines.append(f"date: '{now}'")
     if tags:
         lines.append("tags:")
-        for tag in tags:
-            lines.append(f"  - {tag}")
-    lines.append("draft: false")
-    lines.append("---")
-    lines.append("")
-    lines.append(header)
-    lines.append("")
+        lines.extend([f"  - {tag}" for tag in tags])
+
+    lines.extend([
+        "draft: false",
+        "---",
+        "",
+        "## Últimos Posts",
+        ""
+    ])
 
     if not posts:
-        if lang == "en":
-            lines.append("No published posts yet. Stay tuned!")
-        else:
-            lines.append("Nenhum post publicado ainda. Em breve teremos novidades!")
+        lines.append("Nenhum post publicado ainda.")
         return "\n".join(lines) + "\n"
 
     # Group by year/month
     grouped = defaultdict(list)
     for post in posts:
-        if post["date"]:
-            key = (post["date"].year, post["date"].month)
-        else:
-            key = (0, 0)
+        key = (post["date"].year, post["date"].month) if post["date"] else (0, 0)
         grouped[key].append(post)
 
-    sorted_keys = sorted(grouped.keys(), reverse=True)
-
-    for year, month in sorted_keys:
+    for year, month in sorted(grouped.keys(), reverse=True):
         if year == 0:
-            lines.append(no_date)
+            lines.append("### Sem data")
         else:
-            month_name = month_names.get(month, "")
-            lines.append(f"### {month_name} {year}")
+            lines.append(f"### {MONTH_NAMES_PT.get(month, '')} {year}")
         lines.append("")
 
         for post in grouped[(year, month)]:
-            date_str = ""
-            if post["date"]:
-                date_str = post["date"].strftime(date_fmt)
-
-            tag_str = ""
-            if post["tags"]:
-                tag_str = " — " + ", ".join(f"`{t}`" for t in post["tags"])
-
+            date_str = post["date"].strftime("%d/%m/%Y") if post["date"] else ""
+            tag_str = " — " + ", ".join(f"`{t}`" for t in post["tags"]) if post["tags"] else ""
             lines.append(f"- [{post['title']}]({post['url']}) *({date_str})*{tag_str}")
 
         lines.append("")
@@ -394,42 +291,37 @@ def generate_section_index(posts, lang, title, tags):
 
 def main():
     print("Scanning content directory...")
-    posts_pt, posts_en = collect_posts()
-    print(f"Found {len(posts_pt)} published post(s)")
+    posts = collect_posts()
+    print(f"Found {len(posts)} published post(s)")
 
-    # Generate section-level indices (blog, docs, projects, etc.)
-    sections = get_sections_with_posts(posts_pt)
+    # Generate root _index.md
+    root_content = generate_index(posts)
+    with open(INDEX_FILE, "w", encoding="utf-8") as f:
+        f.write(root_content)
+    print(f"Main index generated: {INDEX_FILE}")
+
+    # Generate section-level indices (blog, docs, etc.)
+    sections = get_sections_with_posts(posts)
     for section in sorted(sections):
         section_dir = os.path.join(CONTENT_DIR, section)
         if not os.path.isdir(section_dir):
             continue
 
-        section_posts_pt = filter_posts_by_section(posts_pt, section)
-        section_posts_en = filter_posts_by_section(posts_en, section)
+        section_posts = filter_posts_by_section(posts, section)
 
         # Get existing frontmatter titles/tags
-        title_pt, tags_pt = get_section_frontmatter(section_dir, "pt")
-        title_en, tags_en = get_section_frontmatter(section_dir, "en")
+        title, tags = get_section_frontmatter(section_dir)
 
         # Fallback titles
-        if not title_pt:
-            title_pt = section.replace("-", " ").title()
-        if not title_en:
-            title_en = section.replace("-", " ").title()
+        if not title:
+            title = section.replace("-", " ").title()
 
-        # Generate pt-br section index
-        section_index_pt = os.path.join(section_dir, "_index.md")
-        content = generate_section_index(section_posts_pt, "pt", title_pt, tags_pt)
-        with open(section_index_pt, "w", encoding="utf-8") as f:
+        # Generate section index
+        section_index = os.path.join(section_dir, "_index.md")
+        content = generate_section_index(section_posts, title, tags)
+        with open(section_index, "w", encoding="utf-8") as f:
             f.write(content)
-        print(f"Section index generated (pt-br): {section_index_pt}")
-
-        # Generate en section index
-        # section_index_en = os.path.join(section_dir, "_index.en.md")
-        # content = generate_section_index(section_posts_en, "en", title_en, tags_en)
-        # with open(section_index_en, "w", encoding="utf-8") as f:
-        #    f.write(content)
-        # print(f"Section index generated (en): {section_index_en}")
+        print(f"Section index generated: {section_index}")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 ---
 title: "Guia de Instalação e Ativação"
 description: "Instruções completas para clonar, configurar e executar o projeto localmente com Hugo, Docker ou Dev Containers."
+date: "2026-08-27T14:22:32Z"
 weight: 1
 ---
 
@@ -230,7 +231,7 @@ O tema **Hextra** é altamente customizável através do arquivo de configuraç�
 
 Você pode personalizar o comportamento e o visual do tema editando as seguintes seções do `hugo.yaml`:
 
-#### 🏷️ Título, Logo e Identidade
+#### Título, Logo e Identidade
 
 ```yaml
 title: "Meu Nome | DevHub"
