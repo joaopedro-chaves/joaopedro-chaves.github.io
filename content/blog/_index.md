@@ -1,6 +1,6 @@
 ---
 title: "Blog"
-date: '2026-08-26T18:14:19Z'
+date: '2026-08-26T18:18:21Z'
 draft: false
 ---
 

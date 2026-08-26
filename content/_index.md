@@ -1,11 +1,15 @@
 ---
-date: '2026-08-26T18:14:19Z'
+date: '2026-08-26T18:18:21Z'
 draft: false
-title: 'Blog'
 cascade:
-  type: docs
+  type: 
 ---
 
+{{< cards >}}
+{{< card link="blog" title="Blog" icon="newspaper" >}}
+{{< card link="docs" title="Documentação" icon="book-open" >}}
+{{< card link="projects" title="Projetos" icon="folder" >}}
+{{< /cards >}}
 ## Últimos Posts
 
 ### Agosto 2026
