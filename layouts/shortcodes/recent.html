@@ -1,0 +1,78 @@
+{{/*
+  Shortcode: recent
+  Exibe os N posts mais recentes de uma seção como cards Hextra nativos.
+
+  Parâmetros:
+    - limit   (int)    : Quantidade de posts a exibir. Padrão: 5
+    - section (string) : Filtrar por seção ("blog", "docs", etc.). Padrão: todas
+    - style   (string) : "cards" (grade) ou "list" (lista). Padrão: "cards"
+*/}}
+
+{{- $limit   := .Get "limit"   | default 5 -}}
+{{- $section := .Get "section" | default "" -}}
+{{- $style   := .Get "style"   | default "cards" -}}
+{{- $now     := now -}}
+
+{{/* Coleta todas as páginas regulares, não draft, não futuras */}}
+{{- $pages := where .Site.RegularPages "Draft" false -}}
+{{- $pages  = where $pages "Date" "<=" $now -}}
+
+{{/* Filtra por seção, se informada */}}
+{{- if $section -}}
+  {{- $pages = where $pages "Section" $section -}}
+{{- end -}}
+
+{{/* Ordena por data decrescente e limita */}}
+{{- $pages = $pages | first $limit -}}
+
+{{- if $pages -}}
+  {{- if eq $style "cards" -}}
+<div class="hextra-cards mt-4 mb-6" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
+  {{- range $pages -}}
+  <a class="hextra-card group flex flex-col no-underline" href="{{ .RelPermalink }}">
+    <span class="hextra-card-icon flex items-center gap-2 text-sm font-semibold text-gray-600 dark:text-gray-400">
+      {{- if .Params.icon -}}
+        {{- partial "utils/icon.html" (dict "name" .Params.icon "attributes" "class=\"h-5 w-5\"") -}}
+      {{- else -}}
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      {{- end -}}
+      <span class="text-xs font-normal text-gray-400">{{ .Date.Format "02/01/2006" }}</span>
+    </span>
+    <span class="hextra-card-title mt-1 font-semibold text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+      {{ .Title }}
+    </span>
+    {{- with .Params.description -}}
+    <span class="hextra-card-subtitle mt-1 text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+      {{ . }}
+    </span>
+    {{- end -}}
+    {{- with .Params.tags -}}
+    <span class="mt-2 flex flex-wrap gap-1">
+      {{- range . -}}
+      <span class="inline-block rounded-full bg-primary-100 dark:bg-primary-900 px-2 py-0.5 text-xs text-primary-700 dark:text-primary-300">`{{ . }}`</span>
+      {{- end -}}
+    </span>
+    {{- end -}}
+  </a>
+  {{- end -}}
+</div>
+  {{- else -}}
+<ul class="recent-list mt-2 mb-6 space-y-1 list-none p-0">
+  {{- range $pages -}}
+  <li class="flex items-center gap-2 text-sm">
+    <span class="text-gray-400 dark:text-gray-500 shrink-0">{{ .Date.Format "02/01/2006" }}</span>
+    <a href="{{ .RelPermalink }}" class="text-gray-800 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+      {{ .Title }}
+    </a>
+    {{- with .Params.tags -}}
+    <span class="text-gray-400 dark:text-gray-500 text-xs">
+      — {{ delimit . ", " }}
+    </span>
+    {{- end -}}
+  </li>
+  {{- end -}}
+</ul>
+  {{- end -}}
+{{- else -}}
+<p class="text-sm text-gray-400 dark:text-gray-500 my-4">Nenhum post encontrado.</p>
+{{- end -}}

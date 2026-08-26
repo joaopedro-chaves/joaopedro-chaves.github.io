@@ -4,9 +4,13 @@ toc: false
 
 ## Posts recentes
 
-## Portfólio
+{{< recent limit=5 section="blog" >}}
 
-## Documentação
+## Documentação recente
+
+{{< recent limit=3 section="docs" style="list" >}}
+
+## Portfólio
 
 {{< cards >}}
 {{< card link="blog" title="Blog" icon="newspaper" >}}

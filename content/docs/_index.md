@@ -1,18 +1,12 @@
 ---
-title: Documentation
-next: first-page
+title: "Documentation"
+date: '2026-08-26T15:27:59Z'
+draft: false
 ---
 
-This is a demo of the theme's documentation layout.
+## Últimos Posts
 
-## Hello, World!
+### Sem data
 
-```go {filename="main.go"}
-package main
+- [Guia de Instalação e Ativação](/docs/guia-instalacao/) *()*
 
-import "fmt"
-
-func main() {
-    fmt.Println("Hello, World!")
-}
-```

@@ -68,7 +68,17 @@ def parse_frontmatter(filepath):
             value = value.strip().strip("'\"")
             data[key] = value
 
-    # Parse tags (list format)
+    # Parse tags: support inline array format ["tag1", "tag2"] or block list - tag
+    if "tags" in data and isinstance(data["tags"], str):
+        val = data["tags"].strip()
+        if val.startswith("[") and val.endswith("]"):
+            items = re.findall(r'[^,\[\]"\'\s]+', val)
+            data["tags"] = [i.strip() for i in items if i.strip()]
+        elif val:
+            data["tags"] = [val]
+        else:
+            data["tags"] = []
+
     tags_match = re.search(
         r"tags:\s*\n((?:\s*-\s*.+\n?)+)", frontmatter_text
     )
@@ -153,6 +163,12 @@ def collect_posts():
             title_pt = frontmatter.get("title", os.path.splitext(filename)[0])
             date = parse_date(frontmatter.get("date", ""))
             tags_pt = frontmatter.get("tags", [])
+
+            # Skip future posts
+            if date:
+                now_cmp = datetime.now(date.tzinfo) if date.tzinfo else datetime.now()
+                if date > now_cmp:
+                    continue
 
             # Calculate relative path from content dir for the link
             rel_path = os.path.relpath(filepath, CONTENT_DIR)
@@ -377,23 +393,11 @@ def generate_section_index(posts, lang, title, tags):
 
 
 def main():
-    print("🔍 Scanning content directory...")
+    print("Scanning content directory...")
     posts_pt, posts_en = collect_posts()
     print(f"Found {len(posts_pt)} published post(s)")
 
-    # Generate root pt-br index
-    content_pt = generate_index(posts_pt, lang="pt")
-    with open(INDEX_FILE_PT, "w", encoding="utf-8") as f:
-        f.write(content_pt)
-    print(f"Index generated (pt-br): {INDEX_FILE_PT}")
-
-    # Generate root en index
-    content_en = generate_index(posts_en, lang="en")
-    with open(INDEX_FILE_EN, "w", encoding="utf-8") as f:
-        f.write(content_en)
-    print(f"Index generated (en): {INDEX_FILE_EN}")
-
-    # Generate section-level indices
+    # Generate section-level indices (blog, docs, projects, etc.)
     sections = get_sections_with_posts(posts_pt)
     for section in sorted(sections):
         section_dir = os.path.join(CONTENT_DIR, section)
@@ -421,11 +425,11 @@ def main():
         print(f"Section index generated (pt-br): {section_index_pt}")
 
         # Generate en section index
-        section_index_en = os.path.join(section_dir, "_index.en.md")
-        content = generate_section_index(section_posts_en, "en", title_en, tags_en)
-        with open(section_index_en, "w", encoding="utf-8") as f:
-            f.write(content)
-        print(f"Section index generated (en): {section_index_en}")
+        # section_index_en = os.path.join(section_dir, "_index.en.md")
+        # content = generate_section_index(section_posts_en, "en", title_en, tags_en)
+        # with open(section_index_en, "w", encoding="utf-8") as f:
+        #    f.write(content)
+        # print(f"Section index generated (en): {section_index_en}")
 
 
 if __name__ == "__main__":
