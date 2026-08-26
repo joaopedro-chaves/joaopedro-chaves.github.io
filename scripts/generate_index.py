@@ -183,11 +183,15 @@ def generate_index(posts, title=None):
         "---",
         f"date: '{now}'",
         "draft: false",
-        f"title: '{display_title}'",
         "cascade:",
-        "  type: docs",
+        "  type: ",
         "---",
         "",
+        "{{< cards >}}",
+        "{{< card link=\"blog\" title=\"Blog\" icon=\"newspaper\" >}}",
+        "{{< card link=\"docs\" title=\"Documentação\" icon=\"book-open\" >}}",
+        "{{< card link=\"projects\" title=\"Projetos\" icon=\"folder\" >}}",
+        "{{< /cards >}}",
         "## Últimos Posts",
         ""
     ])
