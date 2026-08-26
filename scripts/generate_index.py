@@ -243,55 +243,56 @@ def filter_posts_by_section(posts, section):
     """Filter posts to only include those in the given section."""
     return [p for p in posts if p.get("section") == section]
 
+# generate _index.md for each section (not used, but useful for future)
 
-def generate_section_index(posts, title, tags):
-    """Generate a section _index.md content."""
-    lines = []
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+# def generate_section_index(posts, title="", tags=None):
+#    """Generate a section _index.md content."""
+#    lines = []
+#    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    lines.extend([
-        "---",
-        f'title: "{title}"',
-        f"date: '{now}'"
-    ])
+#    lines.extend([
+#        "---",
+#        f'title: "{title}"',
+#        f"date: '{now}'"
+#    ])
 
-    if tags:
-        lines.append("tags:")
-        lines.extend([f"  - {tag}" for tag in tags])
+#    if tags:
+#        lines.append("tags:")
+#        lines.extend([f"  - {tag}" for tag in tags])
 
-    lines.extend([
-        "draft: false",
-        "---",
-        "",
-        "## Últimos Posts",
-        ""
-    ])
+#    lines.extend([
+#        "draft: false",
+#        "---",
+#        "",
+#        "## Últimos Posts",
+#        ""
+#    ])
 
-    if not posts:
-        lines.append("Nenhum post publicado ainda.")
-        return "\n".join(lines) + "\n"
+#    if not posts:
+#        lines.append("Nenhum post publicado ainda.")
+#        return "\n".join(lines) + "\n"
 
-    # Group by year/month
-    grouped = defaultdict(list)
-    for post in posts:
-        key = (post["date"].year, post["date"].month) if post["date"] else (0, 0)
-        grouped[key].append(post)
+#    # Group by year/month
+#    grouped = defaultdict(list)
+#    for post in posts:
+#        key = (post["date"].year, post["date"].month) if post["date"] else (0, 0)
+#        grouped[key].append(post)
 
-    for year, month in sorted(grouped.keys(), reverse=True):
-        if year == 0:
-            lines.append("### Sem data")
-        else:
-            lines.append(f"### {MONTH_NAMES_PT.get(month, '')} {year}")
-        lines.append("")
+#    for year, month in sorted(grouped.keys(), reverse=True):
+#        if year == 0:
+#            lines.append("### Sem data")
+#        else:
+#            lines.append(f"### {MONTH_NAMES_PT.get(month, '')} {year}")
+#        lines.append("")
 
-        for post in grouped[(year, month)]:
-            date_str = post["date"].strftime("%d/%m/%Y") if post["date"] else ""
-            tag_str = " — " + ", ".join(f"`{t}`" for t in post["tags"]) if post["tags"] else ""
-            lines.append(f"- [{post['title']}]({post['url']}) *({date_str})*{tag_str}")
+#        for post in grouped[(year, month)]:
+#            date_str = post["date"].strftime("%d/%m/%Y") if post["date"] else ""
+#            tag_str = " — " + ", ".join(f"`{t}`" for t in post["tags"]) if post["tags"] else ""
+#            lines.append(f"- [{post['title']}]({post['url']}) *({date_str})*{tag_str}")
 
-        lines.append("")
+#        lines.append("")
 
-    return "\n".join(lines) + "\n"
+#    return "\n".join(lines) + "\n"
 
 
 def main():
@@ -322,11 +323,11 @@ def main():
             title = section.replace("-", " ").title()
 
         # Generate section index
-        section_index = os.path.join(section_dir, "_index.md")
-        content = generate_section_index(section_posts, title, tags)
-        with open(section_index, "w", encoding="utf-8") as f:
-            f.write(content)
-        print(f"Section index generated: {section_index}")
+        # section_index = os.path.join(section_dir, "_index.md")
+        # content = generate_section_index(section_posts, title, tags)
+        # with open(section_index, "w", encoding="utf-8") as f:
+        #     f.write(content)
+        # print(f"Section index generated: {section_index}")
 
 
 if __name__ == "__main__":
