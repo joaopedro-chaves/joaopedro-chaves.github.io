@@ -1,22 +1,18 @@
 ---
-toc: false
+date: '2026-08-26T18:00:35Z'
+draft: false
+title: 'Blog'
+cascade:
+  type: docs
 ---
 
-{{< cards >}}
-{{< card link="blog" title="Blog" icon="newspaper" >}}
-{{< card link="docs" title="Docs" icon="book-open" >}}
-{{< card link="about" title="About" icon="user" >}}
-{{< card link="projects" title="Projects" icon="folder" >}}
-{{< /cards >}}
+## Últimos Posts
 
-## Posts recentes
+### Agosto 2026
 
-{{< recent limit=5 section="blog" >}}
+- [Meu Primeiro Post](/blog/2026/meu-primeiro-post/) *(20/08/2026)* — `boas-vindas`, `hugo`, `desenvolvimento`
 
-## Documentação recente
+### Sem data
 
-{{< recent limit=3 section="docs" style="list" >}}
+- [Projeto 1](/projects/projeto-1/) *()*
 
-## Portfólio
-
-_Em construção..._
