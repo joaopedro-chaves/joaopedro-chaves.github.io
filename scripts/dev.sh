@@ -139,6 +139,12 @@ reload_index() {
     print_message "Index recarregado"
 }
 
+git_conflict() {
+    print_message "Resolvendo conflito de git..."
+    git rebase
+    print_message "Conflito de git resolvido"
+}
+
 show_help() {
     echo "Uso: $0 {start|stop|reload|logs|new-post|help}"
     echo ""
@@ -149,6 +155,8 @@ show_help() {
     echo "  logs     Exibe os logs do ambiente de desenvolvimento."
     echo "  new-post Cria um novo post."
     echo "  help     Exibe esta mensagem."
+    echo "  reload_index Recarrega o index."
+    echo "  git_conflict Resolve conflito de git."
 }
 
 main() {
@@ -175,6 +183,9 @@ main() {
             ;;
         reload_index)
             reload_index
+            ;;
+        git_conflict)
+            git_conflict
             ;;
         *)  
             print_warning "Comando invalido"
