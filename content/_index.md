@@ -1,9 +1,5 @@
 ---
-<<<<<<< HEAD
-date: '2026-09-03T22:44:26Z'
-=======
-date: '2026-09-03T23:01:47Z'
->>>>>>> 3fccc46 (docs: expand documentation for generate_index.py and add project image with metadata support)
+date: '2026-09-03T23:06:06Z'
 draft: false
 cascade:
   type: 
@@ -19,11 +15,8 @@ cascade:
 
 ### Agosto 2026
 
-- [Guia de Instalação e Ativação](/docs/guia-instalacao/) *(27/08/2026)*
-<<<<<<< HEAD
 - [Automatizando tarefas com Python](/docs/automatizacao_py/) *(27/08/2026)*
-=======
+- [Guia de Instalação e Ativação](/docs/guia-instalacao/) *(27/08/2026)*
 - [Projeto 1](/projects/projeto-1/) *(26/08/2026)*
->>>>>>> 3fccc46 (docs: expand documentation for generate_index.py and add project image with metadata support)
 - [Desenvolvimento de Banco de Dados - Projeto Universitario](/blog/2026/mysqlproject/) *(26/08/2026)* — `desenvolvimento`, `banco`, `de`, `dados`, `projeto`, `MySQL`
 
