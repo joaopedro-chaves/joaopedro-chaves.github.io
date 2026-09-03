@@ -47,6 +47,11 @@ menu:
       url: "https://instagram.com/joaopedro.254"
       params:
         icon: instagram
+    - name: Linkedin
+      weight: 9
+      url: "https://www.linkedin.com/in/joaopedrochaves254/"
+      params:
+        icon: linkedin
 
 params:
   navbar:
