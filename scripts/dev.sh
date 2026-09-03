@@ -133,6 +133,12 @@ EOF
     print_message "Post criado com sucesso! "
 }
 
+reload_index() {
+    print_message "Recarregando index..."
+    python scripts/generate_index.py
+    print_message "Index recarregado"
+}
+
 show_help() {
     echo "Uso: $0 {start|stop|reload|logs|new-post|help}"
     echo ""
@@ -166,6 +172,9 @@ main() {
             ;;
         logs)
             logs
+            ;;
+        reload_index)
+            reload_index
             ;;
         *)  
             print_warning "Comando invalido"

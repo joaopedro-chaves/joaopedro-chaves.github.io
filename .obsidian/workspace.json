@@ -1,24 +1,24 @@
 {
   "main": {
-    "id": "7ca170ca6adb505a",
+    "id": "564ebd95c2858b8b",
     "type": "split",
     "children": [
       {
-        "id": "810f461de7d615bf",
+        "id": "467d1e35d08978be",
         "type": "tabs",
         "children": [
           {
-            "id": "61884d3a5b223ad3",
+            "id": "c50663ecef6a4f4a",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "blog/2026/meu-primeiro-post.md",
+                "file": "content/about.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "meu-primeiro-post"
+              "title": "about"
             }
           }
         ]
@@ -27,15 +27,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "d6721ed26f6204f9",
+    "id": "2c0345dafff35f60",
     "type": "split",
     "children": [
       {
-        "id": "b41ce03b102d9480",
+        "id": "34a147b92aed53c6",
         "type": "tabs",
         "children": [
           {
-            "id": "58aa70a94d1b5417",
+            "id": "10df4fdf3c6a3858",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -50,7 +50,7 @@
             }
           },
           {
-            "id": "f6b7f97778d0fea1",
+            "id": "8d685f283ee8b2c1",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -67,7 +67,7 @@
             }
           },
           {
-            "id": "b2056396ad52dbab",
+            "id": "3f89ccc5ca8d5269",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -86,20 +86,20 @@
     "width": 300
   },
   "right": {
-    "id": "1aea6ecdbcf03cdd",
+    "id": "e48d32ef47d4cddd",
     "type": "split",
     "children": [
       {
-        "id": "16a2b7f6f55fd4be",
+        "id": "a39f39fdd8225ba6",
         "type": "tabs",
         "children": [
           {
-            "id": "94acbc681ea7238a",
+            "id": "186698631a2180b2",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "blog/2026/meu-primeiro-post.md",
+                "file": "content/about.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,12 +113,12 @@
             }
           },
           {
-            "id": "c4eec1ae6a188ec1",
+            "id": "da9ab6c88b32312c",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "blog/2026/meu-primeiro-post.md",
+                "file": "content/about.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -127,7 +127,7 @@
             }
           },
           {
-            "id": "885a38539d118845",
+            "id": "a551f685ebf91217",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -142,7 +142,7 @@
             }
           },
           {
-            "id": "5d8102a6f3963f4c",
+            "id": "df2c2fbafda3a932",
             "type": "leaf",
             "state": {
               "type": "all-properties",
@@ -156,12 +156,12 @@
             }
           },
           {
-            "id": "fbbcd35820560292",
+            "id": "6add15f6f1806181",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "blog/2026/meu-primeiro-post.md",
+                "file": "content/about.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -188,15 +188,9 @@
       "bases:Criar nova base": false
     }
   },
-  "active": "61884d3a5b223ad3",
+  "active": "c50663ecef6a4f4a",
   "lastOpenFiles": [
-    "blog/_index.md",
-    "docs/_index.md",
-    "docs/guia-instalacao.md",
-    "docs/automatizacao_py.md",
-    "projects/_index.md",
-    "projects/projeto-1.md",
-    "_index.md",
-    "about.md"
+    "content/projects/projeto-1.md",
+    "static/images/image1.png"
   ]
 }
