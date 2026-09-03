@@ -55,6 +55,7 @@ start_dev() {
         print_message "Servidor em: http://localhost:8000"
     else
         print_message "Iniciando com o Hugo..."
+        cd ..
         hugo mod tidy && hugo server --bind 0.0.0.0 -p 8000 --disableFastRender --buildDrafts
         print_message "Servidor em: http://localhost:8000"
     fi
